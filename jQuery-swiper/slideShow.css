@@ -53,11 +53,12 @@ ul, li{
 #slide-show .sml-pic li{
     position: relative;
     width: 40px;
-    height: 3px;
+    height: 5px;
     background-color: #fff;
     float: left;
     margin-right: 10px;
     border-radius: 1px;
+    cursor: pointer;
 }
 #slide-show .sml-pic li span{
     position: absolute;

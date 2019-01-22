@@ -17,7 +17,8 @@
         animateDuration : 300,          // 单个切换时间
         interval : 5000,                // 轮播时间
         type : 'progress',              // 小点切换方式 : normal / progress
-        direction : 'left'              // 轮播方向 : left / right
+        direction : 'left',             // 轮播方向 : left / right, 默认right
+        autoplay : true,                // 是否自动轮播,默认false, false时, 小点样式只能为 normal
     });       
 */
 
@@ -31,6 +32,8 @@
         this.init();
     }
     SlideShow.prototype.init = function () {
+        //是否自动轮播, 默认false
+        this.autoplay = this.bar.autoplay || false
         //添加猫腻图
         this.createFake();
         //创建Dom元素
@@ -52,7 +55,7 @@
         //设置轮播图第一张图位置
         this.oUlPic.css('left', -this.PicPosArr[1]);
         //启动定时器
-        this.startTimer();
+        if (this.autoplay) this.startTimer();
         //绑定事件
         this.bindEvent();
     };
@@ -88,9 +91,12 @@
             picStr += '<li><a href="'+ url[i] +'"><img src="' + image[i] + '" alt=""></a></li>';
             if (i < len - 2) {
                 //小点样式  normal / progress
-                this.bar.type === 'normal'
-                ? smlStr += '<li></li>'
-                : smlStr += '<li><span class="fake"></span></li>';
+                this.autoplay
+                ? (
+                    this.bar.type === 'normal'
+                    ? smlStr += '<li></li>'
+                    : smlStr += '<li><span class="fake"></span></li>')
+                : smlStr += '<li></li>'
             }
         }
         
@@ -106,13 +112,17 @@
 
         picBox.find('li').css('width', this.bar.width + 'px');
         //设置小点默认样式
-        this.bar.type === 'normal'
-        ? $('.sml-pic li').eq(0).addClass('active')
-        : $('.fake').eq(0).addClass('fill')
+        this.autoplay
+        ? (
+            this.bar.type === 'normal'
+            ? $('.sml-pic li').eq(0).addClass('active')
+            : $('.fake').eq(0).addClass('fill'))
+        : $('.sml-pic li').eq(0).addClass('active')
     };
     //绑定事件
     SlideShow.prototype.bindEvent = function () {
         var self = this;
+
         this.oBtnl && this.oBtnl.on('click', function () {
             self.i--;
             self.restart();
@@ -129,7 +139,7 @@
     SlideShow.prototype.restart = function () {
         clearInterval(this.timer);
         this.change();
-        this.startTimer();
+        if (this.autoplay) this.startTimer();
     };
     //定时器
     SlideShow.prototype.startTimer = function () {
@@ -150,16 +160,17 @@
         // 3 1 2 3 1
         var self = this;
         var animateTime = this.bar.animateDuration || 400
-        //右轮播, 当索引大于最后一张时, 瞬间移到第二张, 并把索引改为第三张
+        //右轮播, 当索引大于最后一张时, 瞬间移到第二张, 并把索引改为第三张, 移到第三张
         if (this.i > this.len - 1) {
             this.oUlPic.css('left', -this.PicPosArr[1]);
             this.i = 2;
         }
-        //左轮播, 当索引小于0时, 瞬间移到倒数第二张, 并把索引改为倒数第三张
+        //左轮播, 当索引小于0时, 瞬间移到倒数第二张, 并把索引改为倒数第三张, 移到倒数第三张
         if (this.i < 0) {
             this.oUlPic.css('left', -this.PicPosArr[this.len - 2]);
             this.i = this.len - 3;
         }
+
         this.showSml();
         this.oUlPic
             .stop()
@@ -174,14 +185,17 @@
             索引 : 0     1 2 3 4
             小点 : -1(2) 0 1 2 0
         */
-        console.log(this.i)
         var index = (this.i - 1) % (this.len - 2);
-       
-        this.bar.type === 'normal' 
-        ? ($('.active', $('#slide-show .sml-pic')).removeClass('active'),
-            this.aLiSml.eq(index).addClass('active'))
-        : ($('span', $('#slide-show .sml-pic')).removeClass('fill'),
-            this.aLiSml.eq(index).children('span').addClass('fill'))
+        
+        this.autoplay
+        ? (
+            this.bar.type === 'normal' 
+            ? ($('.active', $('#slide-show .sml-pic')).removeClass('active'),
+                this.aLiSml.eq(index).addClass('active'))
+            : ($('span', $('#slide-show .sml-pic')).removeClass('fill'),
+                this.aLiSml.eq(index).children('span').addClass('fill')) )
+        : ($('.active', $('#slide-show .sml-pic')).removeClass('active'),
+             this.aLiSml.eq(index).addClass('active'))
     };
     //获取图片位置
     SlideShow.prototype.getPos = function (arr) {
