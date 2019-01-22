@@ -1,4 +1,5 @@
 html结构
+
     <div id="slide-show"></div>
 
 js使用
