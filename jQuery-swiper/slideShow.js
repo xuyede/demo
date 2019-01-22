@@ -85,7 +85,8 @@
             smlStr = '',
             image = this.image,
             url = this.url,
-            len = image.length;
+            len = image.length,
+            interval = this.bar.interval || 4000;
 
         for (var i = 0; i < len; i++) {
             picStr += '<li><a href="'+ url[i] +'"><img src="' + image[i] + '" alt=""></a></li>';
@@ -110,23 +111,37 @@
             .append(btnL)
             .append(smlPic.html(smlStr));
 
-        picBox.find('li').css('width', this.bar.width + 'px');
+        picBox
+            .find('li')
+            .css('width', this.bar.width + 'px');
         //设置小点默认样式
         this.autoplay
         ? (
             this.bar.type === 'normal'
-            ? $('.sml-pic li').eq(0).addClass('active')
-            : $('.fake').eq(0).addClass('fill'))
+            ? $('.sml-pic li')
+                .eq(0)
+                .addClass('active')
+            : (
+                $('.fake')
+                    .eq(0)
+                    .addClass('fill'),
+                $('.fill').css({
+                    width: '100%',
+                    transition: 'width linear ' + interval + 'ms'
+                })
+             )
+        )
         : $('.sml-pic li').eq(0).addClass('active')
     };
     //绑定事件
     SlideShow.prototype.bindEvent = function () {
         var self = this;
-
+        //左边按钮事件
         this.oBtnl && this.oBtnl.on('click', function () {
             self.i--;
             self.restart();
         });
+        //右边按钮事件
         this.oBtnr && this.oBtnr.on('click', function () {
             self.i++;
             self.restart();
@@ -139,6 +154,7 @@
     SlideShow.prototype.restart = function () {
         clearInterval(this.timer);
         this.change();
+        //自动轮播时开启定时器
         if (this.autoplay) this.startTimer();
     };
     //定时器
@@ -185,22 +201,50 @@
             索引 : 0     1 2 3 4
             小点 : -1(2) 0 1 2 0
         */
-        var index = (this.i - 1) % (this.len - 2);
+        var index = (this.i - 1) % (this.len - 2),
+            interval = this.bar.interval || 4000;
         
         this.autoplay
         ? (
-            this.bar.type === 'normal' 
-            ? ($('.active', $('#slide-show .sml-pic')).removeClass('active'),
-                this.aLiSml.eq(index).addClass('active'))
-            : ($('span', $('#slide-show .sml-pic')).removeClass('fill'),
-                this.aLiSml.eq(index).children('span').addClass('fill')) )
-        : ($('.active', $('#slide-show .sml-pic')).removeClass('active'),
-             this.aLiSml.eq(index).addClass('active'))
+            //如果是自动轮播,样式选择 normal或 progress
+            this.bar.type === 'normal'
+            ? (
+                $('.active', $('#slide-show .sml-pic'))
+                    .removeClass('active'),
+                this.aLiSml
+                    .eq(index)
+                    .addClass('active')
+              )
+            : (
+                //移除样式添加样式
+                $('span', $('#slide-show .sml-pic'))
+                    .removeClass('fill')
+                    .css({transition: 'none', width: '0px'}),
+                this.aLiSml
+                    .eq(index)
+                    .children('span')
+                    .addClass('fill'),
+                $('.fill')
+                    .css({
+                        width: '100%',
+                        transition: 'width linear ' + interval + 'ms'
+                    })
+              )
+            )
+        //如果不是自动轮播,默认样式为 normal
+        : (
+            $('.active', $('#slide-show .sml-pic'))
+                .removeClass('active'),
+            this.aLiSml
+                .eq(index)
+                .addClass('active')
+          )
     };
     //获取图片位置
     SlideShow.prototype.getPos = function (arr) {
         var arrPos = [],
             _arr = arr;
+            
         for (var i = 0, len = arr.length; i < len; i++) {
             arrPos.push(_arr[i].offsetLeft);
         }

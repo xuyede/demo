@@ -69,10 +69,6 @@ ul, li{
     background-color: orange;
     transition: width 0;
 }
-#slide-show .sml-pic li span.fill{
-    width: 100%;
-    transition: width linear 5000ms;
-}
 #slide-show .sml-pic li.active{
-    background-color: orange 
+    background-color: orange;
 }
