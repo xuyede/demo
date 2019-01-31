@@ -1,3 +1,5 @@
+注意: 只能5张图
+
 html结构
 
     <div id="slideshow"></div>
