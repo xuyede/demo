@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./index.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="slideshow"></div>
+    
+    <script src="./jquery.js"></script>
+    <script src="./index.js"></script>
+    <script>
+        $('#slideshow').slide({
+            image : [
+                './img/1.jpg',
+                './img/2.jpg',
+                './img/3.jpg',
+                './img/5.jpg',
+                './img/4.jpg',
+            ],
+            imageUrl : [
+                'https://www.baidu.com',
+                'https://www.taobao.com',
+                'https://mail.163.com',
+                'https://ke.qq.com/index.html',
+                'https://www.bilibili.com/',
+            ],
+            autoplay : true,
+            direction : 'right',
+            interval : 3000,
+            animateTime : 400,
+            stageWidth : 1200,
+            stageHeight : 300,
+            imageHeight : 150,
+            imageWidth : 200
+        });
+    </script>
+</body>
+
+</html>
