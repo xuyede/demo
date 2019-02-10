@@ -1,0 +1,80 @@
+﻿小鸟掉落算法 (需要一个自己维持的帧编号)
+    利用打点计时器原理
+
+                                    1
+                  s = 1/2at^2   ?       第一帧
+                                    2
+
+
+
+      s = 1/2a(t+1)^2-1/2at^2   ?       第二帧
+        = 1/2a( (t+1)^2 - t^2 )
+        = 1/2a(2t+1)
+        = at + 1/2a = at
+                                    3
+
+                                ?       第三帧
+
+                                    4
+
+    eg: 某元素开始位置 y = 100, 变化系数为 a = 8
+        那么, 第一帧 y = 108(变化8), 第二帧 y = 124(变化16), 第三帧 y = 156(变化32)
+
+
+    模拟:自由落体运动
+        var t = 0
+        var y = 100
+        var a = 0.6
+
+        setInterval( () => {
+            t++
+            y += a * t
+            ctx.drawImage(image, x, y)
+        }, 20)
+
+    模拟:先上升,后自由落体运动
+        var t = 0
+        var y = 100
+        var a = 0.6
+
+        setInterval( () => {
+            t++
+            y -= a * (15 - t)
+
+            if (t > 15) {
+                t = 0
+                state = '自由落体'
+            }
+            ctx.drawImage(image, x, y)
+        }, 20)
+
+小鸟旋转
+    ctx.save()
+    ctx.translate( x + bird.W / 2, y + bird.H / 2 )
+    ctx.rotate(deg)
+    ctx.drawImage()
+    ctx.restore()
+
+
+管子碰撞检测
+
+    上管子检测 (左 && 下 && 右)
+    上管子检测 (左 && 上 && 右)
+    通过 ( 右 && 通过 )
+
+
+分数
+    var numberSpace = 30,
+        numberW = 24,
+        scoreStr = this.score.toString()
+    //居中算法: 中轴 + 间距 - 总数字宽度的一半
+    for (let i = 0; i < scoreStr.length; i++) {
+        this.ctx.drawImage(this.imgDomList['font_' + scoreStr.charAt(i)], this.canvas.width / 2 - scoreStr.length / 2 * numberW + numberSpace * i, this.canvas.width * .15)
+    }
+
+
+场景管理器
+    设置一个enter方法, 在每次进入一个场景时初始化该场景的变量
+
+
+
