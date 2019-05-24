@@ -1,0 +1,19 @@
+{
+  "name": "turing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.5.3",
+    "express": "^4.16.4",
+    "http-proxy-middleware": "^0.19.1",
+    "moment": "^2.24.0",
+    "mysql": "^2.16.0",
+    "request": "^2.88.0"
+  }
+}
